@@ -1,4 +1,4 @@
-class EntryPage extends HTMLElement {
+export class EntryPage extends HTMLElement {
   constructor() {
     super();
 

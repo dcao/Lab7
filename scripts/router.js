@@ -1,11 +1,13 @@
 // router.js
 
+import { EntryPage } from '../components/entry-page.js';
+
 export const router = {};
 
 /**
  * Changes the "page" (state) that your SPA app is currently set to
  */
-router.setState = function() {
+router.setState = function(state, back) {
   /**
    * - There are three states that your SPA app will have
    *    1. The home page
@@ -35,4 +37,40 @@ router.setState = function() {
    *    1. You may add as many helper functions in this file as you like
    *    2. You may modify the parameters of setState() as much as you like
    */
+
+    // First: push our state.
+
+    if (state.variant === "settings") {
+        // If we have settings, set the title to "Settings" and
+        // set the clas.
+        document.querySelector("header h1").innerHTML = "Settings";
+        document.querySelector("body").className = "settings";
+        
+        if (!back) history.pushState(state, "Settings", "#settings");
+    } else if (state.variant === "entry") {
+        // If we have an entry, state.entry will contain the entry.
+        // We remove the existing entry-page and add a new entry-page,
+        // setting the entry appropriately.
+        let e = new EntryPage();
+        e.entry = state.entry;
+        document.querySelector("entry-page").remove();
+        document.querySelector("body").appendChild(e);
+
+        // We also set the title.
+        document.querySelector("header h1").innerHTML = state.entry.title;
+        document.querySelector("body").className = "single-entry";
+
+        if (!back) history.pushState(state, state.entry.title, `#entry{state.id}`);
+    } else {
+        // If we're at the home page, we need to set the title to "Journal Entries"
+        // and remove all classes from the body.
+        document.querySelector("header h1").innerHTML = "Journal Entries";
+        document.querySelector("body").className = "";
+
+        if (!back) history.pushState(state, "Journal Entries", "");
+    }
+}
+
+window.onpopstate = function(event) {
+    setState(event.state, true);
 }
