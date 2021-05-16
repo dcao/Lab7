@@ -72,5 +72,5 @@ router.setState = function(state, back) {
 }
 
 window.onpopstate = function(event) {
-    setState(event.state, true);
+    router.setState(event.state, true);
 }
